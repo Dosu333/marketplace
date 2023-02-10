@@ -174,7 +174,7 @@ SPECTACULAR_SETTINGS = {
         "displayRequestDuration": True
     },
     'UPLOADED_FILES_USE_URL': True,
-    'TITLE': 'Ecommerce Application API',
+    'TITLE': 'Sun-Solar Application API',
     'DESCRIPTION': 'Ecommerce Marketplace',
     'VERSION': '1.0.0',
     'LICENCE': {'name': 'BSD License'},
