@@ -15,8 +15,6 @@ class AvailableInvestmentViewset(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return CreateAvailableInvestmentSerializer
-        elif self.action == 'add_investor':
-            return InvestorSerializer
         return super().get_serializer_class()
 
     def get_permissions(self):
@@ -27,31 +25,25 @@ class AvailableInvestmentViewset(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
-    @action(methods=['POST'], detail=True, permission_classes=[IsAuthenticated, ], url_path='add-investor')
+    @action(methods=['GET'], detail=True, permission_classes=[IsAuthenticated, ], url_path='add-investor')
     def add_investor(self, request, pk=None):
         """This endpoint adds user to an investment"""
         try:
-            serializer = self.get_serializer(data=request.data)
-            if serializer.is_valid():
-                investment = self.get_object()
-                user = get_user_model().objects.get(id=str(serializer.data))
-                investment.investors.add(user)
-                return Response({'success': True}, status=status.HTTP_200_OK)
-            return Response({'success': False, 'errors': serializer.errors}, status.HTTP_400_BAD_REQUEST)
+            investment = self.get_object()
+            user = get_user_model().objects.get(id=request.user.pk)
+            investment.investors.add(user)
+            return Response({'success': True}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'success': False,'errors': str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-    @action(methods=['POST'], detail=True, permission_classes=[IsAuthenticated, ], url_path='remove-investor')
+    @action(methods=['GET'], detail=True, permission_classes=[IsAuthenticated, ], url_path='remove-investor')
     def remove_investor(self, request, pk=None):
         """This endpoint remove user from an investment"""
         try:
-            serializer = self.get_serializer(data=request.data)
-            if serializer.is_valid():
-                investment = self.get_object()
-                user = get_user_model().objects.get(id=str(serializer.data))
-                investment.investors.remove(user)
-                return Response({'success': True}, status=status.HTTP_200_OK)
-            return Response({'success': False, 'errors': serializer.errors}, status.HTTP_400_BAD_REQUEST)
+            investment = self.get_object()
+            user = get_user_model().objects.get(id=request.user.pk)
+            investment.investors.remove(user)
+            return Response({'success': True}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'success': False,'errors': str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR)
