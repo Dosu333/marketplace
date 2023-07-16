@@ -8,6 +8,7 @@ class AvailableInvestment(models.Model):
     interest_rate = models.IntegerField()
     investment = models.IntegerField()
     max_earning = models.IntegerField()
+    image = models.FileField(upload_to='investmemt/', null=True, blank=True)
     investment_duration = models.IntegerField()
     investors = models.ManyToManyField(get_user_model())
 
