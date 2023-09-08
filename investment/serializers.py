@@ -5,12 +5,22 @@ from .models import *
 class AvailableInvestmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = AvailableInvestment
-        fields = ('__all__')
+        fields = '__all__'
 
 class CreateAvailableInvestmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = AvailableInvestment
-        exclude = ['investors', ]
+        fields = '__all__'
+
+class ActiveInvestmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActiveInvestment
+        exclude = ['investor', 'reference']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['product'] = instance.product.name
+        return representation
 
 class InvestorSerializer(serializers.Serializer):
     user_id = serializers.UUIDField()
