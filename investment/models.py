@@ -8,7 +8,8 @@ class AvailableInvestment(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=225)
     interest_rate = models.IntegerField()
-    max_earning = models.IntegerField()
+    amount = models.IntegerField(blank=True, null=True)
+    earnings = models.IntegerField()
     image = models.FileField(upload_to='product', null=True, blank=True)
     investment_duration_in_days = models.IntegerField()
 
@@ -20,7 +21,6 @@ class ActiveInvestment(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     product = models.ForeignKey(AvailableInvestment, on_delete=models.CASCADE)
     investor = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, blank=True, null=True)
-    investment = models.IntegerField()
     reference = models.CharField(max_length=225, blank=True, null=True)
     expected_date = models.DateField(blank=True, null=True)
 
