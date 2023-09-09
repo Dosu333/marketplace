@@ -12,6 +12,7 @@ class User(AbstractUser, PermissionsMixin):
     last_name = models.CharField(max_length=225, blank=False, null=False)
     phone = models.CharField(max_length=14, blank=True, null=True)
     acct_no = models.CharField(max_length=10, blank=True, null=True)
+    profit_balance = models.IntegerField(blank=True, null=True)
     image = models.FileField(upload_to='users/', blank=True, null=True)
     referrer = models.ForeignKey('self', on_delete=models.CASCADE,blank=True, null=True)
     is_staff = models.BooleanField(default=False)

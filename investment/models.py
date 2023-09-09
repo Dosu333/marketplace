@@ -23,6 +23,7 @@ class ActiveInvestment(models.Model):
     investor = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, blank=True, null=True)
     reference = models.CharField(max_length=225, blank=True, null=True)
     expected_date = models.DateField(blank=True, null=True)
+    cashed_out = models.BooleanField(default=False)
 
     def __str__(self):
         return self.investor.email
