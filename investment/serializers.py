@@ -30,3 +30,21 @@ class InvestorSerializer(serializers.Serializer):
         if not get_user_model().objects.filter(id=str(user_id)):
             raise serializers.ValidationError('User does not exist')
         return attrs
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = '__all__'
+
+class InvestmentIDSerializer(serializers.Serializer):
+    product_id = serializers.UUIDField()
+
+    def validate(self, attrs):
+        if not AvailableInvestment.objects.filter(str(attrs['product_id'])):
+            raise serializers.ValidationError('invalid product')
+        return attrs
+    
+class WithdrawalSerializer(serializers.Serializer):
+    receipient_account_number = serializers.CharField(max_length=10)
+    receipient_bank = serializers.CharField(max_length=225, required=False)
+    amount = serializers.IntegerField()

@@ -4,6 +4,12 @@ from datetime import datetime
 from datetime import timedelta
 import uuid
 
+
+TRANSACTION_CHOICES = (
+    ('WITHDRAWAL', 'WITHDRAWAL'),
+    ('DEPOSIT', 'DEPOSIT'),
+)
+
 class AvailableInvestment(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=225)
@@ -32,3 +38,15 @@ class ActiveInvestment(models.Model):
         duration = self.product.investment_duration_in_days
         self.expected_date = datetime.now().date() + timedelta(days=duration)
         super(ActiveInvestment, self).save(*args, **kwargs)
+
+class Transaction(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    transaction_type = models.CharField(max_length=10, choices=TRANSACTION_CHOICES, blank=True, null=True)
+    reference = models.CharField(max_length=225, blank=True, null=True)
+    amount = models.IntegerField()
+    receipient_account_number = models.CharField(max_length=10, blank=True, null=True)
+    receipient_bank = models.CharField(max_length=225, blank=True, null=True)
+    verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email
