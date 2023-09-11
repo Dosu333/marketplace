@@ -19,7 +19,7 @@ class ActiveInvestmentSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['product'] = {'name': instance.product.name, 'amount': instance.product.amount}
+        representation['product'] = {'name': instance.product.name, 'amount': instance.product.amount, 'earnings': instance.product.earnings}
         return representation
 
 class InvestorSerializer(serializers.Serializer):
