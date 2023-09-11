@@ -46,7 +46,8 @@ class Transaction(models.Model):
     amount = models.IntegerField()
     receipient_account_number = models.CharField(max_length=10, blank=True, null=True)
     receipient_bank = models.CharField(max_length=225, blank=True, null=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, blank=True, null=True)
     verified = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.email
+        return self.user.email

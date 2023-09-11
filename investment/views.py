@@ -18,9 +18,9 @@ def paystack_verify(ref):
     response = r.json()
     if response['status']:
         if response['data']['status'] == 'success':
-            return True
-        return False
-    return False
+            return True, response['data']  
+        return False, response
+    return False, response
                          
 
 class AvailableInvestmentViewset(viewsets.ModelViewSet):
@@ -68,24 +68,26 @@ class TransactionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, ]
 
     def get_serializer_class(self):
-        if self.action == 'verify-transaction':
+        if self.action == 'verify-investment':
             return InvestmentIDSerializer
         elif self.action == 'withdraw':
             return WithdrawalSerializer
         return super().get_serializer_class()
-
-    @action(methods=['POST'], detail=False,  url_path='verify-investment')
+    
+    @action(methods=['POST'], detail=False,  serializer_class=InvestmentIDSerializer, url_path='verify-investment')
     def verify_investment(self, request, *args, **kwargs):
         ref = self.request.query_params.get('ref', None)
         serializer = InvestmentIDSerializer(data=request.data)
 
         try:
             if ref is not None and serializer.is_valid():
-                if not paystack_verify(ref):
+                verified, payment_details = paystack_verify(ref)
+                if not verified:
                     return Response({'success': False, 'errors':'something is wrong with paystack payment'}, status=status.HTTP_400_BAD_REQUEST)
                 product = AvailableInvestment.objects.get(id=str(serializer.data['product_id']))
+                amount = int(payment_details['amount'])/100
                 ActiveInvestment.objects.create(product=product, investor=request.user, reference=ref)
-                self.queryset.create(reference=ref,transaction_type='DEPOSIT')
+                self.queryset.create(reference=ref, transaction_type='DEPOSIT', user=request.user, amount=amount, verified=verified)
                 return Response({'success': True}, status=status.HTTP_200_OK)
             return Response({'success': False, 'errors':'invalid reference or product id'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

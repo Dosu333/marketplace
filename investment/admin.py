@@ -3,3 +3,4 @@ from .models import *
 
 admin.site.register(AvailableInvestment)
 admin.site.register(ActiveInvestment)
+admin.site.register(Transaction)

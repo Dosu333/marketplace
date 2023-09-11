@@ -40,9 +40,9 @@ class InvestmentIDSerializer(serializers.Serializer):
     product_id = serializers.UUIDField()
 
     def validate(self, attrs):
-        if not AvailableInvestment.objects.filter(str(attrs['product_id'])):
+        if not AvailableInvestment.objects.filter(id=str(attrs['product_id'])):
             raise serializers.ValidationError('invalid product')
-        return attrs
+        return super().validate(attrs)
     
 class WithdrawalSerializer(serializers.Serializer):
     receipient_account_number = serializers.CharField(max_length=10)
