@@ -15,7 +15,7 @@ from .models import User
 class ListUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['id', 'first_name', 'last_name', 'email',
+        fields = ['id', 'first_name', 'last_name', 'email', 'phone',
                   'image', 'last_login', 'created_at', 'profit_balance']
 
 
